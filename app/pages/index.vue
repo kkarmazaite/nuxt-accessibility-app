@@ -1,5 +1,11 @@
 <template>
   <div>
-    <Hero />
+    <section>
+      <Hero />
+    </section>
+
+    <section>
+      <TextBlock />
+    </section>
   </div>
 </template>
