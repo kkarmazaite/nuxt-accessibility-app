@@ -79,6 +79,15 @@
           </ul>
         </template>
 
+        <template v-else-if="menuItem.name === 'Contact'">
+          <NuxtLink  
+            class="block h-[56px] px-3 uppercase text-gray-700 flex items-center border-b focus:ring-2"
+            role="menuitem"
+            to="/contact">
+              {{ menuItem.name }}
+          </NuxtLink>
+        </template>
+        
         <template v-else>
           <a
             class="block h-[56px] px-3 uppercase text-gray-700 flex items-center border-b focus:ring-2"

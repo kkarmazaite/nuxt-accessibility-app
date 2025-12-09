@@ -36,6 +36,14 @@
           <Icon name="uil:angle-down" />
         </button>
 
+        <NuxtLink  
+          v-else-if="menuItem.name === 'Contact'" 
+          class="block h-[56px] px-3 uppercase text-white flex items-center justify-center gap-2 focus:ring-2"
+          role="menuitem"
+          to="/contact">
+            {{ menuItem.name }}
+        </NuxtLink>
+
         <a
           v-else
           class="block h-[56px] px-3 uppercase text-white flex items-center justify-center gap-2 focus:ring-2"
