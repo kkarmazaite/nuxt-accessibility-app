@@ -58,7 +58,7 @@
                 Please fix the errors below.
             </div>
 
-            <form @submit="handleSubmit" novalidate class="flex flex-col gap-5" aria-describedby="contactDescription">
+            <form @submit="handleSubmit" novalidate class="flex flex-col gap-5">
               <p id="contactDescription">
                 Fill out the form below and we will get back to you as soon as possible.
               </p>
@@ -70,7 +70,8 @@
                     v-model="form.name"
                     @input="isSubmitted && validateForm()"
                     :aria-invalid="!!errors.name"
-                    :aria-describedby="errors.name ? 'name-error' : null"
+                    :aria-errormessage="errors.name ? 'name-error' : null"
+                    autocomplete="name"
                     required
                     class="bg-gray-100 border rounded w-full p-2"
                   >
@@ -92,7 +93,7 @@
                   v-model="form.email"
                   @input="isSubmitted && validateForm()"
                   :aria-invalid="!!errors.email"
-                  :aria-describedby="errors.email ? 'email-error' : null"
+                  :aria-errormessage="errors.email ? 'email-error' : null"
                   autocomplete="email"
                   required
                   class="bg-gray-100 border rounded w-full p-2"

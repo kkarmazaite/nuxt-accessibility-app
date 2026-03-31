@@ -1,17 +1,35 @@
 <script setup lang="ts">
     const { menuItems } = defineProps(['menuItems'])
     const openMenu = ref<string | null>(null)
+    const activeTrigger = ref<HTMLElement | null>(null)
 
-    const toggleMenu = (id: string) => {
-        openMenu.value = openMenu.value === id ? null : id
+    const toggleMenu = (id: string, el?: HTMLElement) => {
+      if (openMenu.value === id) {
+        openMenu.value = null
+      } else {
+        openMenu.value = id
+        activeTrigger.value = el || null
+      }
+    }
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (openMenu.value && activeTrigger.value) {
+          openMenu.value = null
+          activeTrigger.value.focus()
+          return
+        }
+
+        openMenu.value = null
+      }
     }
 
     onMounted(() => {
-        document.addEventListener('keydown', (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-            openMenu.value = null
-            }
-        })
+      document.addEventListener('keydown', handleEscape)
+    })
+
+    onUnmounted(() => {
+      document.removeEventListener('keydown', handleEscape)
     })
 </script>
 
@@ -30,7 +48,7 @@
           role="menuitem"
           :aria-haspopup="true"
           :aria-expanded="openMenu === menuItem.id"
-          @click="toggleMenu(menuItem.id)"
+          @click="(e) => toggleMenu(menuItem.id, e.currentTarget as HTMLElement)"
         >
           <span>{{ menuItem.name }}</span>
           <Icon name="uil:angle-down" />

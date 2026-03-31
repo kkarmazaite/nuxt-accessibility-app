@@ -2,21 +2,33 @@
     const { menuItems } = defineProps(['menuItems'])
     const showMenu = ref(false)
     const openSubmenu = ref<string | null>(null)
+    const activeTrigger = ref<HTMLElement | null>(null)
 
     const toggleMenu = () => {
-    showMenu.value = !showMenu.value
-    if (!showMenu.value) openSubmenu.value = null
+      showMenu.value = !showMenu.value
+      if (!showMenu.value) openSubmenu.value = null
     }
 
-    const toggleSubmenu = (id: string) => {
-    openSubmenu.value = openSubmenu.value === id ? null : id
+    const toggleSubmenu = (id: string, el?: HTMLElement) => {
+      if (openSubmenu.value === id) {
+        openSubmenu.value = null
+      } else {
+        openSubmenu.value = id
+        activeTrigger.value = el || null
+      }
     }
 
     const handleEscape = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
+      if (e.key === 'Escape') {
+        if (openSubmenu.value && activeTrigger.value) {
+          openSubmenu.value = null
+          activeTrigger.value.focus()
+          return
+        }
+
         showMenu.value = false
         openSubmenu.value = null
-    }
+      }
     }
 
     onMounted(() => document.addEventListener('keydown', handleEscape))
@@ -49,8 +61,7 @@
         <template v-if="menuItem.children.length">
           <button
             class="w-full flex justify-between items-center h-[56px] px-3 uppercase text-gray-700 border-b focus:ring-2"
-            role="menuitem"
-            @click="toggleSubmenu(menuItem.id)"
+            @click="(e) => toggleSubmenu(menuItem.id, e.currentTarget as HTMLElement)"
             :aria-expanded="openSubmenu === menuItem.id"
             aria-haspopup="true"
           >
@@ -70,7 +81,7 @@
             >
               <a
                 class="block h-[56px] px-3 uppercase text-white flex items-center border-b focus:ring-2"
-                role="menuitem"
+  
                 :href="subMenuItem.link"
               >
                 {{ subMenuItem.name }}
@@ -82,7 +93,6 @@
         <template v-else-if="menuItem.name === 'Contact'">
           <NuxtLink  
             class="block h-[56px] px-3 uppercase text-gray-700 flex items-center border-b focus:ring-2"
-            role="menuitem"
             to="/contact">
               {{ menuItem.name }}
           </NuxtLink>
@@ -91,7 +101,6 @@
         <template v-else>
           <a
             class="block h-[56px] px-3 uppercase text-gray-700 flex items-center border-b focus:ring-2"
-            role="menuitem"
             :href="menuItem.link"
           >
             {{ menuItem.name }}
